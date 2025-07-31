@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f9e2c7; }
+        .confirmation-container { max-width: 500px; margin: 7.5rem auto 2.5rem auto; background: #fff; border-radius: 1.2rem; box-shadow: 0 2px 12px rgba(184,137,74,0.10); padding: 2.5rem 2rem; text-align: center; position: relative; }
+        .confetti { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .confirmation-content { position: relative; z-index: 2; }
+        .confirmation-title { color: #38a169; font-size: 2rem; font-weight: 800; margin-bottom: 1.2rem; }
+        .confirmation-amount { color: #b8894a; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.2rem; }
+        .confirmation-btn { margin-top: 2rem; background: #38a169; color: #fff; border: none; border-radius: 0.8rem; padding: 0.9rem 2.2rem; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; }
+    </style>
+</head>
+<body style="background:#f9e2c7;">
+    <!-- Header -->
+    <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <div style="display:flex;align-items:center;width:100%;gap:1.2rem;">
+                    <a href="buyerDashboard.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Dashboard</a>
+                    <a href="payment.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Payment</a>
+                    <a href="wallet.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Wallet</a>
+                    <a href="index.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Home</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="confirmation-container">
+        <div id="confetti-wrapper"></div>
+        <div class="confirmation-content">
+            <div class="confirmation-title"><i class="fas fa-check-circle"></i> Order Confirmed!</div>
+            <div id="orderSummary"></div>
+            <div id="confirmationMsg" style="color:#a78a5a;font-size:1.08rem;margin-bottom:1.5rem;">Thank you for shopping with Farmily! Your order has been placed successfully.</div>
+            <button class="confirmation-btn" onclick="window.location.href='buyerDashboard.html'">Continue Shopping</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+    // Get amount, payment method, and cart from localStorage or URL
+    const params = new URLSearchParams(window.location.search);
+    const amount = params.get('amount') || 0;
+    let paymentMethod = localStorage.getItem('lastPaymentMethod') || 'wallet';
+    let cart = JSON.parse(localStorage.getItem('lastOrderCart') || '[]');
+    // Fallback: if cart is empty, show only amount
+    if (!cart.length) {
+        cart = [{ name: 'Order', qty: '', price: amount, image: '' }];
+    }
+    // Render order summary (image, name, quantity only)
+    let summaryHtml = '<div style="margin-bottom:1.2rem;">';
+    cart.forEach(item => {
+        summaryHtml += `<div style='display:flex;align-items:center;gap:1.1rem;justify-content:flex-start;margin-bottom:0.7rem;background:#fff3e6;border-radius:0.7rem;padding:0.7rem 1.2rem;'>`;
+        if (item.image) summaryHtml += `<img src="${item.image}" alt="${item.name}" style="width:54px;height:44px;object-fit:cover;border-radius:0.5rem;box-shadow:0 1px 6px rgba(184,137,74,0.10);">`;
+        summaryHtml += `<span style='font-weight:600;color:#222;font-size:1.08rem;margin-left:0.7rem;'>${item.name}</span>`;
+        summaryHtml += `<span style='color:#a78a5a;font-size:1.05rem;margin-left:auto;'>Qty: <b>${item.qty}</b></span>`;
+        summaryHtml += `</div>`;
+    });
+    summaryHtml += `</div>`;
+    document.getElementById('orderSummary').innerHTML = summaryHtml;
+    // Confetti animation using canvas-confetti for all orders
+    function launchConfetti() {
+      if (typeof confetti !== 'function') return;
+      confetti({
+        particleCount: 120,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ['#38a169','#b8894a','#f7b84b','#e53e3e','#f6fff8'],
+        scalar: 1.1
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.7 },
+          colors: ['#38a169','#b8894a','#f7b84b','#e53e3e','#f6fff8'],
+          scalar: 0.9
+        });
+      }, 400);
+    }
+    // Always show confetti for order confirmation, after script is loaded
+    window.addEventListener('load', function() {
+      setTimeout(launchConfetti, 300);
+    });
+    // Clean up localStorage (remove lastOrderCart, lastPaymentMethod)
+    localStorage.removeItem('lastOrderCart');
+    localStorage.removeItem('lastPaymentMethod');
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+      body { background: #f9e2c7; }
+      .orders-container { max-width: 900px; margin: 4rem auto 2rem auto; padding: 2rem 0; }
+      .order-card { background: #fff3e6; border-radius: 1rem; padding: 1.1rem 1.2rem; margin-bottom: 1.1rem; box-shadow: 0 1px 6px #b8894a11; display: flex; flex-direction: column; gap: 0.5rem; }
+      .order-header { display: flex; align-items: center; gap: 1.2rem; }
+      .order-id { font-weight: 700; color: #b8894a; }
+      .order-status { margin-left: auto; }
+      .order-items { margin-top: 0.7rem; }
+      .order-item-row { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 0.7rem; }
+      .order-item-img { width: 60px; height: 48px; object-fit: cover; border-radius: 0.7rem; box-shadow: 0 1px 4px rgba(184,137,74,0.07); }
+      .order-total-row, .order-payment-row { display: flex; align-items: center; gap: 1.2rem; margin-top: 0.5rem; }
+      .back-btn { background: #b8894a; color: #fff; border: none; border-radius: 0.7rem; padding: 0.6rem 1.2rem; font-weight: 600; cursor: pointer; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <button class="back-btn" onclick="window.location.href='buyerDashboard.html'">&#8592; Back to Dashboard</button>
+        </div>
+    </header>
+    <main class="orders-container">
+        <h2 style="font-size:1.35rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">My Orders</h2>
+        <div id="ordersList"></div>
+    </main>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      async function renderOrdersList() {
+        const ordersList = document.getElementById('ordersList');
+        ordersList.innerHTML = '<div style="color:#b8894a;">Loading...</div>';
+        try {
+          const res = await fetch('/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          const orders = await res.json();
+          if (!orders.length) {
+            ordersList.innerHTML = '<div style="color:#b8894a;">No orders found.</div>';
+            return;
+          }
+          ordersList.innerHTML = orders.map(order => {
+            let paymentStatusBadge = '';
+            if (order.paymentStatus && order.paymentStatus.toLowerCase() === 'paid') {
+              paymentStatusBadge = '<span style="background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Paid</span>';
+            } else {
+              paymentStatusBadge = '<span style="background:#f7b84b22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Pending</span>';
+            }
+            let paymentMethodText = order.paymentMethod ? order.paymentMethod.toUpperCase() : 'N/A';
+            let statusBadge = '';
+            if (order.status === 'delivered') statusBadge = '<span style="background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Delivered</span>';
+            else statusBadge = '<span style="background:#b8894a22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Accepted</span>';
+
+            // Render all items in the order
+            let itemsHtml = '';
+            if (Array.isArray(order.items) && order.items.length > 0) {
+              itemsHtml = order.items.map(item => {
+                const productName = item.product && item.product.name ? item.product.name : 'N/A';
+                const farmerName = item.product && item.product.farmer && item.product.farmer.fullName ? item.product.farmer.fullName : 'Unknown';
+                const qty = item.quantity !== undefined ? item.quantity : 'N/A';
+                const price = item.product && item.product.price ? item.product.price : 0;
+                const image = item.product && (item.product.images && item.product.images.length > 0 ? item.product.images[0] : item.product.image) ? (item.product.images && item.product.images.length > 0 ? item.product.images[0] : item.product.image) : '';
+                const subtotal = (item.quantity && price) ? ('₹' + (item.quantity * price)) : '-';
+                return `<div class='order-item-row'>
+                  <img src='${image}' alt='${productName}' class='order-item-img'>
+                  <div><b>Product:</b> ${productName}</div>
+                  <div><b>Farmer:</b> ${farmerName}</div>
+                  <div><b>Qty:</b> ${qty}</div>
+                  <div><b>Subtotal:</b> ${subtotal}</div>
+                </div>`;
+              }).join('');
+            } else {
+              itemsHtml = '<div style="color:#b8894a;">No items found in this order.</div>';
+            }
+
+            // Calculate total for the order
+            let total = 0;
+            if (Array.isArray(order.items)) {
+              total = order.items.reduce((sum, item) => {
+                const price = item.product && item.product.price ? item.product.price : 0;
+                return sum + (item.quantity && price ? item.quantity * price : 0);
+              }, 0);
+            }
+            // Delivery status badge logic
+            let deliveryStatus = order.deliveryStatus || 'pending';
+            let deliveryBadge = '';
+            if (deliveryStatus === 'pending') deliveryBadge = '<span style="background:#f7b84b22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Pending Pickup</span>';
+            else if (deliveryStatus === 'picked_up') deliveryBadge = '<span style="background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Out for Delivery</span>';
+            else if (deliveryStatus === 'delivered') deliveryBadge = '<span style="background:#38a169;color:#fff;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Delivered</span>';
+
+            return `
+              <div class="order-card">
+                <div class="order-header">
+                  <div class="order-id">Order ID:</div>
+                  <div style="color:#222;">${order._id}</div>
+                  <div class="order-status">${statusBadge}</div>
+                </div>
+                <div class="order-items">${itemsHtml}</div>
+                <div class="order-total-row"><b>Total:</b> ₹${total}</div>
+                <div class="order-payment-row"><b>Payment:</b> ${paymentStatusBadge} <span style='font-size:0.98em;color:#a78a5a;margin-left:0.7rem;'>${paymentMethodText}</span></div>
+                <div class="order-payment-row"><b>Delivery Status:</b> ${deliveryBadge}</div>
+              </div>
+            `;
+          }).join('');
+        } catch (err) {
+          ordersList.innerHTML = '<div style="color:#e53e3e;">Error loading orders.</div>';
+        }
+      }
+      renderOrdersList();
+    });
+    </script>
+</body>
+</html>

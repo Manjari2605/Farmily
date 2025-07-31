@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Fix Font Awesome: use <link> not <script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body style="background:#f9e2c7;">
+    <!-- Farmily Navbar -->
+<header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;position:relative;z-index:10;">
+    <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+        <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+            <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;color:#38a169;"></i>
+            <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+        </div>
+        <nav class="nav-menu" id="navMenu">
+            <div style="display:flex;align-items:center;width:100%;gap:1.2rem;">
+                <div class="nav-icon" id="profileMenuBtn" style="background:#f6f9f6;border-radius:50%;padding:0.6rem 0.8rem;box-shadow:0 2px 8px rgba(49,130,206,0.08);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;">
+                    <i class="fas fa-user" style="font-size:1.5rem;color:#38a169;"></i>
+                    <div id="profileDropdown" style="display:none;position:absolute;top:120%;right:0;background:#fff;border-radius:1rem;box-shadow:0 4px 16px #0001;padding:1.1rem 1.5rem;min-width:180px;z-index:10;">
+                        <div id="profileName" style="font-weight:700;color:#38a169;margin-bottom:0.7rem;">Delivery Agent</div>
+                        <button id="logoutBtn" style="background:#e53e3e;color:#fff;font-weight:600;padding:0.6rem 1.2rem;border:none;border-radius:0.7rem;cursor:pointer;width:100%;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+        <!-- Summary Cards -->
+        <div style="max-width:1200px;margin:0 auto;display:flex;gap:2rem;justify-content:flex-start;padding:2.2rem 2rem 0 2rem;position:relative;z-index:1;">
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(124,58,237,0.10);padding:1.3rem 2.2rem;display:flex;flex-direction:column;align-items:center;min-width:160px;">
+                <div style="background:#ede9fe;color:#7c3aed;border-radius:50%;padding:0.7rem 0.9rem;margin-bottom:0.5rem;font-size:1.5rem;"><i class="fas fa-truck"></i></div>
+                <div style="font-size:2.1rem;font-weight:700;color:#b8894a;" id="activeDeliveries">8</div>
+                <div style="color:#b8894a;font-size:1.05rem;">Active Deliveries</div>
+            </div>
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:1.3rem 2.2rem;display:flex;flex-direction:column;align-items:center;min-width:160px;">
+                <div style="background:#fefcbf;color:#d69e2e;border-radius:50%;padding:0.7rem 0.9rem;margin-bottom:0.5rem;font-size:1.5rem;"><i class="fas fa-check-circle"></i></div>
+                <div style="font-size:2.1rem;font-weight:700;color:#38a169;" id="completedToday">156</div>
+                <div style="color:#38a169;font-size:1.05rem;">Completed Today</div>
+            </div>
+            
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(220,38,38,0.10);padding:1.3rem 2.2rem;display:flex;flex-direction:column;align-items:center;min-width:160px;">
+                <div style="background:#e6fffa;color:#38a169;border-radius:50%;padding:0.7rem 0.9rem;margin-bottom:0.5rem;font-size:1.5rem;"><i class="fas fa-wallet"></i></div>
+                <div style="font-size:2.1rem;font-weight:700;color:#b8894a;" id="todaysEarnings">₹2,340</div>
+                <div style="color:#b8894a;font-size:1.05rem;">Today's Earnings</div>
+            </div>
+        </div>
+
+        <!-- Pending Deliveries Section -->
+        <div style="max-width:1200px;margin:2.5rem auto 0 auto;">
+            <h2 style="font-size:1.35rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Pending Deliveries</h2>
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2.2rem 2.2rem 1.5rem 2.2rem;">
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#f6fff8;">
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Order ID</th>
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Customer Name</th>
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Farmer Name</th>
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Pickup Point</th>
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Checkout Point</th>
+        <th style="padding:0.8rem 1.2rem;text-align:left;color:#38a169;font-weight:700;">Actions</th>
+    </tr>
+                        </thead>
+                        <tbody id="pendingDeliveriesTable">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet in Profile Dropdown -->
+        <style>
+        #profileWalletRow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1rem; justify-content: center; }
+        #profileWalletIcon { background: #e6fffa; color: #38a169; border-radius: 50%; padding: 0.5rem 0.7rem; font-size: 1.2rem; }
+        #profileWalletAmount { font-size: 1.3rem; font-weight: 700; color: #b8894a; }
+        #profileWalletLabel { font-size: 1.05rem; color: #a78a5a; font-weight: 600; }
+        </style>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const dropdown = document.getElementById('profileDropdown');
+          if (dropdown && !document.getElementById('profileWalletRow')) {
+            const walletRow = document.createElement('div');
+            walletRow.id = 'profileWalletRow';
+            walletRow.innerHTML = `
+              <span id="profileWalletIcon"><i class="fas fa-wallet"></i></span>
+              <span id="profileWalletLabel">Total Earnings</span>
+              <span id="profileWalletAmount">₹0</span>
+            `;
+            dropdown.insertBefore(walletRow, dropdown.firstChild);
+          }
+        });
+        </script>
+        <!-- Recent Deliveries Table -->
+        <div style="max-width:1200px;margin:2.5rem auto 0 auto;">
+            <h2 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Recent Deliveries</h2>
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:1.5rem 1.2rem;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#f6fff8;">
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;border-radius:0.7rem 0 0 0.7rem;">Order ID</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Customer</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Delivered On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentDeliveriesTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/deliveryDashboard.js"></script>
+    <script>
+async function fetchDashboardStats() {
+  // Fetch summary stats from backend
+  const res = await fetch('/api/orders/delivery/stats', {
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+  });
+  const stats = await res.json();
+  document.getElementById('activeDeliveries').textContent = stats.activeDeliveries || 0;
+  document.getElementById('completedToday').textContent = stats.completedToday || 0;
+  document.getElementById('todaysEarnings').textContent = '₹' + (stats.todaysEarnings || 0);
+}
+
+async function fetchAssignedOrders() {
+  const res = await fetch('/api/orders/delivery', {
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+  });
+  const orders = await res.json();
+  renderOrders(orders);
+}
+function renderOrders(orders) {
+  const table = document.getElementById('pendingDeliveriesTable');
+  table.innerHTML = '';
+  orders.forEach(order => {
+    let actions = '';
+    if (order.deliveryStatus === 'pending') {
+      actions = `<button onclick=\"updateStatus('${order._id}', 'picked_up')\" style=\"background:#f7b84b;color:#fff;border:none;border-radius:0.7rem;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer;\">Picked Up</button>`;
+    } else if (order.deliveryStatus === 'picked_up') {
+      actions = `<button onclick=\"updateStatus('${order._id}', 'delivered')\" style=\"background:#38a169;color:#fff;border:none;border-radius:0.7rem;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer;\">Delivered</button>`;
+    } else {
+      actions = `<span style=\"color:#38a169;font-weight:700;\">Delivered</span>`;
+    }
+    table.innerHTML += `
+      <tr>
+        <td style=\"padding:0.8rem 1.2rem;\">${order._id}</td>
+        <td style=\"padding:0.8rem 1.2rem;\">${order.buyer?.fullName || order.buyer?.name || order.buyer?.email || 'N/A'}</td>
+        <td style=\"padding:0.8rem 1.2rem;\">${order.items?.[0]?.product?.farmer?.fullName || order.items?.[0]?.product?.farmer?.name || 'N/A'}</td>
+        <td style=\"padding:0.8rem 1.2rem;\">${order.items?.[0]?.product?.farmer?.address || 'N/A'}</td>
+        <td style=\"padding:0.8rem 1.2rem;\">${order.buyer?.address || 'N/A'}</td>
+        <td style=\"padding:0.8rem 1.2rem;\">${actions}</td>
+      </tr>
+    `;
+  });
+}
+async function updateStatus(orderId, status) {
+  await fetch(`/api/orders/${orderId}/update-status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    body: JSON.stringify({ status })
+  });
+  fetchAssignedOrders();
+  fetchDashboardStats();
+}
+
+// Profile dropdown logic for delivery agent
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('profileMenuBtn');
+        const dropdown = document.getElementById('profileDropdown');
+        const nameDiv = document.getElementById('profileName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        // Fetch user info from backend
+        async function fetchAndUpdateUserInfo() {
+          const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          const user = await res.json();
+          nameDiv.textContent = user.fullName || user.name || user.email || 'Delivery Agent';
+        }
+        fetchAndUpdateUserInfo();
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function() {
+            dropdown.style.display = 'none';
+        });
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        });
+    });
+
+// Recent Deliveries: show delivered orders with order id and customer name
+async function fetchRecentDeliveries() {
+  const res = await fetch('/api/orders/delivery/history', {
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+  });
+  const orders = await res.json();
+  const container = document.getElementById('recentDeliveriesCards');
+  container.innerHTML = '';
+  orders.forEach(order => {
+    container.innerHTML += `
+      <div style=\"background:#f6fff8;border-radius:1.1rem;box-shadow:0 2px 8px #38a16922;padding:1.2rem 2rem;margin-bottom:1.2rem;min-width:220px;\">
+        <div style=\"font-size:1.08rem;font-weight:700;color:#222;margin-bottom:0.5rem;\">Order ID: ${order._id}</div>
+        <div style=\"font-size:1.05rem;color:#4a5568;\">Customer: ${order.buyer?.fullName || order.buyer?.name || order.buyer?.email || 'N/A'}</div>
+      </div>
+    `;
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  fetchAssignedOrders();
+  fetchDashboardStats();
+  fetchRecentDeliveries();
+});
+</script>
+</body>
+</html>

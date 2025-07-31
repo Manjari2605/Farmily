@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f9e2c7; }
+        .wallet-container { max-width: 500px; margin: 7.5rem auto 2.5rem auto; background: #fff; border-radius: 1.2rem; box-shadow: 0 2px 12px rgba(184,137,74,0.10); padding: 2.5rem 2rem; text-align: center; position: relative; }
+        .wallet-balance { font-size: 1.5rem; font-weight: 800; color: #38a169; margin-bottom: 1.2rem; }
+        .wallet-form-title { color: #b8894a; font-size: 1.15rem; font-weight: 700; margin-bottom: 1.2rem; }
+        .wallet-form { margin-bottom: 1.5rem; }
+        .wallet-fields { display: flex; flex-direction: column; gap: 1rem; align-items: stretch; }
+        .wallet-fields input { font-size: 1.08rem; border-radius: 0.7rem; border: 1.5px solid #f3e2c0; padding: 0.7rem 1.2rem; }
+        .wallet-btn { background: #38a169; color: #fff; border: none; border-radius: 0.8rem; padding: 0.9rem 2.2rem; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; margin-top: 1rem; }
+        .success-msg { color: #38a169; font-weight: 700; margin-bottom: 1rem; display: none; }
+        .error-msg { color: #e53e3e; font-weight: 700; margin-bottom: 1rem; display: none; }
+    </style>
+</head>
+<body style="background:#f9e2c7;">
+    <!-- Header -->
+    <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <div style="display:flex;align-items:center;width:100%;gap:1.2rem;">
+                    <a href="buyerDashboard.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Dashboard</a>
+                    <a href="wallet.html" class="btn btn-outline nav-link active" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Wallet</a>
+                    <a href="index.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Home</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="wallet-container">
+        <div class="wallet-balance">Wallet Balance: ₹<span id="walletBalance">0</span></div>
+        <div class="wallet-form-title">Add Money to Wallet</div>
+        <form id="walletForm" class="wallet-form">
+            <div class="wallet-fields">
+                <input type="number" id="addAmount" min="1" placeholder="Enter amount (₹)" required />
+                <select id="addMethod" required style="font-size:1.08rem;border-radius:0.7rem;border:1.5px solid #f3e2c0;padding:0.7rem 1.2rem;">
+                    <option value="">Select Payment Method</option>
+                    <option value="upi">Pay through UPI</option>
+                    <option value="card">Pay through Card</option>
+                </select>
+                <input type="text" id="upiId" placeholder="Enter UPI ID" style="display:none;" />
+                <input type="text" id="cardNumber" placeholder="Card Number (12 digits)" style="display:none;" />
+                <input type="text" id="cvv" placeholder="CVV (3 digits)" style="display:none;" />
+                <div style="display:flex;gap:0.7rem;" id="expiryFields">
+                    <select id="expiryMonth" style="flex:1;display:none;"><option value="" disabled selected>Month</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
+                    <select id="expiryYear" style="flex:1;display:none;"><option value="" disabled selected>Year</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option></select>
+                </div>
+            </div>
+            <div class="success-msg" id="successMsg">Money added to wallet!</div>
+            <div class="error-msg" id="errorMsg"></div>
+            <button type="submit" class="wallet-btn">Add Money</button>
+        </form>
+    </div>
+    <script>
+    // --- Fetch wallet balance from backend ---
+    let walletBalance = 0;
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+        .then(res => res.json())
+        .then(user => {
+            walletBalance = user.wallet || 0;
+            document.getElementById('walletBalance').textContent = walletBalance;
+        });
+    // --- Payment method fields logic ---
+    const addMethod = document.getElementById('addMethod');
+    const upiId = document.getElementById('upiId');
+    const cardNumber = document.getElementById('cardNumber');
+    const cvv = document.getElementById('cvv');
+    const expiryMonth = document.getElementById('expiryMonth');
+    const expiryYear = document.getElementById('expiryYear');
+    addMethod.addEventListener('change', function() {
+        if (this.value === 'upi') {
+            upiId.style.display = '';
+            cardNumber.style.display = 'none';
+            cvv.style.display = 'none';
+            expiryMonth.style.display = 'none';
+            expiryYear.style.display = 'none';
+        } else if (this.value === 'card') {
+            upiId.style.display = 'none';
+            cardNumber.style.display = '';
+            cvv.style.display = '';
+            expiryMonth.style.display = '';
+            expiryYear.style.display = '';
+        } else {
+            upiId.style.display = 'none';
+            cardNumber.style.display = 'none';
+            cvv.style.display = 'none';
+            expiryMonth.style.display = 'none';
+            expiryYear.style.display = 'none';
+        }
+    });
+    // --- Add money form submit ---
+    document.getElementById('walletForm').onsubmit = async function(e) {
+        e.preventDefault();
+        document.getElementById('successMsg').style.display = 'none';
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.style.display = 'none';
+        const amount = parseInt(document.getElementById('addAmount').value);
+        const method = addMethod.value;
+        if (!amount || amount < 1) {
+            errorMsg.textContent = 'Enter a valid amount.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+        if (!method) {
+            errorMsg.textContent = 'Select a payment method.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+        if (method === 'upi') {
+            if (!upiId.value.trim() || !/^[a-zA-Z0-9.\-_]+@[a-zA-Z]+$/.test(upiId.value.trim())) {
+                errorMsg.textContent = 'Enter a valid UPI ID.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+        } else if (method === 'card') {
+            if (!/^\d{12}$/.test(cardNumber.value.trim())) {
+                errorMsg.textContent = 'Enter a valid 12-digit card number.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            if (!/^\d{3}$/.test(cvv.value.trim())) {
+                errorMsg.textContent = 'Enter a valid 3-digit CVV.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            if (!expiryMonth.value || !expiryYear.value) {
+                errorMsg.textContent = 'Select expiry month and year.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+        }
+        // Call backend to add money to wallet
+        try {
+            const res = await fetch('/api/users/wallet/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({ amount })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                errorMsg.textContent = data.error || 'Failed to add money to wallet.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            walletBalance = data.wallet;
+            document.getElementById('walletBalance').textContent = walletBalance;
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('walletForm').reset();
+            upiId.style.display = 'none';
+            cardNumber.style.display = 'none';
+            cvv.style.display = 'none';
+            expiryMonth.style.display = 'none';
+            expiryYear.style.display = 'none';
+            setTimeout(() => { document.getElementById('successMsg').style.display = 'none'; }, 2000);
+        } catch (err) {
+            errorMsg.textContent = 'Server error. Please try again.';
+            errorMsg.style.display = 'block';
+        }
+    };
+    </script>
+</body>
+</html>

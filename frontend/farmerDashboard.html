@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body style="background:#f9e2c7;">
+    <!-- Header -->
+    <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;color:#38a169;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <div style="display:flex;align-items:center;gap:1.2rem;">
+                <!-- Notification Bell -->
+                <div id="notificationBell" style="position:relative;cursor:pointer;background:#f6f9f6;border-radius:50%;padding:0.6rem 0.8rem;box-shadow:0 2px 8px rgba(49,130,206,0.08);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-bell" style="font-size:1.5rem;color:#b8894a;"></i>
+                    <span id="notificationBadge" style="display:none;position:absolute;top:0.4rem;right:0.5rem;background:#e53e3e;color:#fff;font-size:0.85rem;font-weight:700;border-radius:50%;padding:0.13rem 0.5rem;z-index:2;">0</span>
+                </div>
+                <div id="profileMenuBtn" style="background:#f6f9f6;border-radius:50%;padding:0.6rem 0.8rem;box-shadow:0 2px 8px rgba(49,130,206,0.08);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;">
+                    <i class="fas fa-user" style="font-size:1.5rem;color:#38a169;"></i>
+                    <div id="profileDropdown" style="display:none;position:absolute;top:120%;right:0;background:#fff;border-radius:1rem;box-shadow:0 4px 16px #0001;padding:1.1rem 1.5rem;min-width:180px;z-index:10;">
+                        <div id="profileName" style="font-weight:700;color:#38a169;font-size:1.08rem;margin-bottom:0.7rem;text-align:center;"></div>
+                        <button id="logoutBtn" style="width:100%;background:#e53e3e;color:#fff;border:none;border-radius:0.7rem;padding:0.6rem 0;font-weight:600;cursor:pointer;">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main style="padding-top:3.5rem;min-height:100vh;">
+        <!-- Summary Cards -->
+        <section style="max-width:1100px;margin:2.5rem auto 1.5rem auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
+            <div class="summary-card" style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;">
+                <div style="background:#e6fffa;border-radius:50%;padding:1rem;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-leaf" style="font-size:2rem;color:#38a169;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.1rem;color:#a78a5a;font-weight:600;">Total Products</div>
+                    <div id="summaryTotalProducts" style="font-size:2rem;font-weight:700;color:#b8894a;">0</div>
+                </div>
+            </div>
+            <div class="summary-card" style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;">
+                <div style="background:#fff3e6;border-radius:50%;padding:1rem;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-wallet" style="font-size:2rem;color:#b8894a;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.1rem;color:#a78a5a;font-weight:600;">Earnings</div>
+                    <div id="summaryEarnings" style="font-size:2rem;font-weight:700;color:#b8894a;">₹0</div>
+                </div>
+            </div>
+            <div class="summary-card" style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;">
+                <div style="background:#f6fff8;border-radius:50%;padding:1rem;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-truck" style="font-size:2rem;color:#38a169;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.1rem;color:#a78a5a;font-weight:600;">Orders</div>
+                    <div id="summaryOrders" style="font-size:2rem;font-weight:700;color:#b8894a;">0</div>
+                </div>
+            </div>
+        </section>
+        <!-- Main Content: Upload Product & My Products -->
+        <section style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 2fr;gap:2.2rem;align-items:flex-start;">
+            <!-- Upload Product Card -->
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2.2rem 1.5rem 1.7rem 1.5rem;">
+                <h3 style="font-size:1.25rem;font-weight:700;color:#38a169;margin-bottom:1.2rem;">Upload Product</h3>
+                <form id="uploadProductForm">
+                    <div class="form-group" style="margin-bottom:1.1rem;">
+                        <label class="form-label" for="name" style="font-weight:600;color:#b8894a;">Product Name</label>
+                        <input class="form-input" type="text" id="name" name="name" required style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1.1rem;">
+                        <label class="form-label" for="description" style="font-weight:600;color:#b8894a;">Description</label>
+                        <input class="form-input" type="text" id="description" name="description" required style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1.1rem;">
+                        <label class="form-label" for="image" style="font-weight:600;color:#b8894a;">Image URL</label>
+                        <input class="form-input" type="url" id="image" name="image" required placeholder="https://..." style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1.1rem;">
+                        <label class="form-label" for="price" style="font-weight:600;color:#b8894a;">Price (₹/kg)</label>
+                        <input class="form-input" type="number" id="price" name="price" required style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1.1rem;">
+                        <label class="form-label" for="quantity" style="font-weight:600;color:#b8894a;">Quantity (kg)</label>
+                        <input class="form-input" type="number" id="quantity" name="quantity" required style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:1.3rem;">
+                        <label class="form-label" for="category" style="font-weight:600;color:#b8894a;">Category</label>
+                        <select class="form-select" id="category" name="category" required style="width:100%;border-radius:0.7rem;padding:0.6rem 1rem;">
+                            <option value="Vegetables">Vegetables</option>
+                            <option value="Fruits">Fruits</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;background:#38a169;color:#fff;font-weight:700;font-size:1.08rem;padding:0.8rem 0;border:none;border-radius:0.8rem;cursor:pointer;transition:background 0.2s;">Upload</button>
+                </form>
+            </div>
+            <!-- My Products Grid -->
+            <div>
+                <h3 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">My Products</h3>
+                <div id="myProductList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem;"></div>
+            </div>
+        </section>
+        <!-- Recent Orders Table -->
+        <section style="max-width:1100px;margin:2.5rem auto 0 auto;">
+            <h3 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Recent Orders</h3>
+            <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:1.5rem 1.2rem;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#f6fff8;">
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;border-radius:0.7rem 0 0 0.7rem;">Order ID</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Product</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Buyer</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Qty (kg)</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Total (₹)</th>
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Payment Status</th>
+                            <!-- Action column removed -->
+                            <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;border-radius:0 0.7rem 0.7rem 0;">Order Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersTable">
+                        <!-- Orders will be rendered here by JS. Each row should use the following logic:
+                             - Payment Status: <span class="badge-paid">Paid</span> or <span class="badge-pending">Pending Payment</span>
+                             - Order Status: <span class="badge-accepted">Accepted</span>, <span class="badge-delivered">Delivered</span>
+                        -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <!-- Order Action Modal removed -->
+    <script src="assets/js/farmerDashboard.js"></script>
+    <style>
+        .badge-paid { background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
+        .badge-pending { background:#f7b84b22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
+        .badge-rejected { background:#e53e3e22;color:#e53e3e;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
+        .badge-accepted { background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
+        .badge-delivered { background:#3182ce22;color:#3182ce;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
+        .accept-btn { background:#38a169;color:#fff;border:none;border-radius:0.7rem;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer;transition:background 0.2s; }
+        .accept-btn:hover { background:#2f855a; }
+        .reject-btn { background:#e53e3e;color:#fff;border:none;border-radius:0.7rem;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer;transition:background 0.2s; }
+        .reject-btn:hover { background:#c53030; }
+    </style>
+    <script>
+    // Profile dropdown logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('profileMenuBtn');
+        const dropdown = document.getElementById('profileDropdown');
+        const nameDiv = document.getElementById('profileName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        let userName = '';
+        // Fetch user name from backend
+        fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+            .then(res => res.json())
+            .then(user => {
+                userName = user.fullName || user.name || user.email || 'User';
+                nameDiv.textContent = userName;
+            });
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function() {
+            dropdown.style.display = 'none';
+        });
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        });
+    });
+    </script>
+    <script>
+async function openAssignModal(orderId) {
+  const res = await fetch('/api/users?role=delivery', {
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+  });
+  const agents = await res.json();
+  let modalHtml = `<div id="assignModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:2000;display:flex;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:2rem 2.5rem;border-radius:1rem;box-shadow:0 2px 16px #0002;max-width:350px;width:95vw;position:relative;">
+      <h3 style="font-size:1.15rem;font-weight:700;color:#38a169;margin-bottom:1.2rem;">Assign Delivery Agent</h3>
+      <select id="agentSelect" style="width:100%;padding:0.7rem 1rem;border-radius:0.7rem;margin-bottom:1.2rem;">
+        ${agents.map(a => `<option value="${a._id}">${a.fullName || a.name || a.email}</option>`).join('')}
+      </select>
+      <div style="display:flex;gap:1rem;">
+        <button onclick="assignAgent('${orderId}')" style="background:#38a169;color:#fff;font-weight:700;padding:0.6rem 1.2rem;border:none;border-radius:0.7rem;cursor:pointer;">Assign</button>
+        <button onclick="closeAssignModal()" style="background:#e53e3e;color:#fff;font-weight:700;padding:0.6rem 1.2rem;border:none;border-radius:0.7rem;cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+window.openAssignModal = openAssignModal;
+
+window.assignAgent = async function(orderId) {
+  const agentId = document.getElementById('agentSelect').value;
+  await fetch(`/api/orders/${orderId}/assign-delivery`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    body: JSON.stringify({ deliveryAgentId: agentId })
+  });
+  closeAssignModal();
+  if (typeof renderRecentOrders === 'function') {
+    await renderRecentOrders();
+  } else {
+    location.reload();
+  }
+};
+window.closeAssignModal = function() {
+  const modal = document.getElementById('assignModal');
+  if (modal) modal.remove();
+};
+    </script>
+    <!-- All dashboard JS logic is now in assets/js/farmerDashboard.js -->
+</body>
+</html>

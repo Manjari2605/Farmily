@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmily Signup</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+    <body>
+    <!-- Header -->
+    <header class="header" style="width:100%;background:#f6fff8;box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <div style="display:flex;align-items:center;width:100%;gap:1.2rem;">
+                    <a href="index.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Home</a>
+                    <a href="login.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Login</a>
+                    <a href="signup.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 2.2rem;font-weight:500;text-decoration:none;">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main style="background: url('https://t4.ftcdn.net/jpg/02/31/56/61/360_F_231566167_DcxyiS11UCKdIoFpPdkXFpAzeVhh6qFA.jpg') center center/cover no-repeat fixed; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="form-container" style="max-width: 500px; background: rgba(255,255,255,0.92); box-shadow: 0 8px 32px rgba(56,161,105,0.12); border-radius: 1.5rem; padding: 2.5rem 2rem; position: relative;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-seedling" style="font-size: 2.5rem; color: #38a169; margin-bottom: 0.5rem;"></i>
+                <h2 class="form-title" style="margin-bottom: 0.5rem;">Create Your Farmily Account</h2>
+            </div>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name</label>
+                    <input class="form-input" type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-input" type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-input" type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="role">Role</label>
+                    <select class="form-select" id="role" name="role" required onchange="toggleRoleFields()">
+                        <option value="buyer">Buyer</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="delivery">Delivery Agent</option>
+                    </select>
+                </div>
+                <div class="form-group" id="addressGroup">
+                    <label class="form-label" for="address">Address</label>
+                    <input class="form-input" type="text" id="address" name="address" required>
+                </div>
+                <div class="form-group" id="phoneGroup">
+                    <label class="form-label" for="phone">Phone</label>
+                    <input class="form-input" type="text" id="phone" name="phone" required>
+                </div>
+                <!-- Farmer-specific fields -->
+                <div id="farmerFields" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label" for="landSize">Land Size (hectares)</label>
+                        <input class="form-input" type="number" id="landSize" name="landSize" min="0" step="0.01" placeholder="e.g. 10" required>
+                    </div>
+                </div>
+                <!-- Delivery agent-specific fields -->
+                <div id="deliveryFields" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label" for="vehicleType">Vehicle Type</label>
+                        <select class="form-select" id="vehicleType" name="vehicleType" required>
+                            <option value="">Select vehicle type</option>
+                            <option value="bike">Bike</option>
+                            <option value="car">Car</option>
+                            <option value="van">Van</option>
+                            <option value="truck">Truck</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="licenseNumber">License Number</label>
+                        <input class="form-input" type="text" id="licenseNumber" name="licenseNumber" placeholder="Enter license number" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width:100%; border-radius: 2rem; border-color:none;
+                ">Sign Up</button>
+            </form>
+            <div class="form-link" style="text-align: center; margin-top: 1.5rem;">
+                <a href="login.html" style="color: #38a169; text-decoration: none; font-weight: 500;">Already have an account? Login</a>
+            </div>
+        </div>
+    </main>
+    <script>
+    function toggleRoleFields() {
+        var role = document.getElementById('role').value;
+        document.getElementById('farmerFields').style.display = (role === 'farmer') ? 'block' : 'none';
+        document.getElementById('deliveryFields').style.display = (role === 'delivery') ? 'block' : 'none';
+        // Set required attributes
+        document.getElementById('landSize').required = (role === 'farmer');
+        document.getElementById('vehicleType').required = (role === 'delivery');
+        document.getElementById('licenseNumber').required = (role === 'delivery');
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleRoleFields();
+    });
+
+    async function handleSignup(e) {
+        e.preventDefault();
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+        const address = document.getElementById('address').value;
+        const phone = document.getElementById('phone').value;
+        let landSize = '';
+        let vehicleType = '';
+        let licenseNumber = '';
+        if (role === 'farmer') {
+            landSize = document.getElementById('landSize').value;
+        }
+        if (role === 'delivery') {
+            vehicleType = document.getElementById('vehicleType').value;
+            licenseNumber = document.getElementById('licenseNumber').value;
+        }
+        const payload = {
+            fullName,
+            email,
+            password,
+            role,
+            address,
+            phone,
+            landSize,
+            vehicleType,
+            licenseNumber
+        };
+        try {
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = 'login.html';
+            } else {
+                alert(data.error || 'Signup failed.');
+            }
+        } catch (err) {
+            alert('Network error. Please try again.');
+        }
+    }
+    </script>
+    <script src="assets/js/signup.js"></script>
+</body>

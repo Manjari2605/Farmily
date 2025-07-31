@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farmily</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" style="width:100%;background:#f6fff8;box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
+        <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
+            <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
+                <i class="fas fa-seedling brand-icon" style="font-size:1.6rem;margin-right:0.18rem;"></i>
+                <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <div style="display:flex;align-items:center;width:100%;gap:1.2rem;">
+                    <a href="index.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Home</a>
+                    <a href="login.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 1.2rem;font-weight:500;text-decoration:none;">Login</a>
+                    <a href="signup.html" class="btn btn-outline nav-link" style="border-radius:2rem;padding:0.5rem 2.2rem;font-weight:500;text-decoration:none;">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Form -->
+    <main style="background: url('https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2021/01/optimising_agriculture/22518234-1-eng-GB/Optimising_agriculture_pillars.jpg') center center/cover no-repeat fixed; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="form-container" style="max-width: 520px; min-width:340px; background: rgba(255,255,255,0.93); box-shadow: 0 8px 32px rgba(56,161,105,0.13); border-radius: 1.5rem; padding: 2.5rem 2rem; position: relative;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-seedling" style="font-size: 2.5rem; color: #38a169; margin-bottom: 0.5rem;"></i>
+                <h1 class="form-title" style="margin-bottom: 0.5rem;">Welcome Back</h1>
+                <p class="form-subtitle" style="color: #4a5568;">Sign in to your Farmily account</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-group" id="userTypeGroup">
+                    <label class="form-label" for="userType">Login As</label>
+                    <select id="userType" name="userType" class="form-select" required>
+                        <option value="">Select user type</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="buyer">Buyer</option>
+                        <option value="delivery">Delivery</option>
+                    </select>
+                </div>
+                <script>
+                // Pre-select userType based on URL query parameter and hide selector if present
+                document.addEventListener('DOMContentLoaded', function() {
+                    const params = new URLSearchParams(window.location.search);
+                    const role = params.get('role');
+                    if (role) {
+                        document.getElementById('userType').value = role;
+                        document.getElementById('userTypeGroup').style.display = 'none';
+                    }
+                });
+                </script>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: #4a5568; font-size: 0.875rem;">
+                        <input type="checkbox" style="accent-color: #38a169;">
+                        Remember me
+                    </label>
+                    <a href="#" style="color: #38a169; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
+                        Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span style="padding-left:0.5rem;">Sign In</span>
+                </button>
+                <style>
+                .btn.btn-primary {
+                    border-radius: 2rem !important;
+                    padding: 0.85rem 0 !important;
+                    font-size: 1.1rem !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 0.5rem !important;
+                    border: none !important;
+                    text-decoration: none !important;
+                    box-shadow: 0 2px 8px rgba(56,161,105,0.08) !important;
+                    width: 100% !important;
+                    min-width: 180px;
+                    max-width: 340px;
+                    margin: 0 auto;
+                }
+                </style>
+            </form>
+            
+            <div class="form-link" style="text-align: center; margin-top: 1.5rem;">
+                <p>Don't have an account? <a href="signup.html" style="color: #38a169; text-decoration: none; font-weight: 500;">Sign up here</a></p>
+            </div>
+            
+        </div>
+    </main>
+    <script>
+    function showNotification(msg) {
+        alert(msg);
+    }
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        let role = '';
+        // If role selector is hidden, get value from URL
+        if (document.getElementById('userTypeGroup').style.display === 'none') {
+            const params = new URLSearchParams(window.location.search);
+            role = params.get('role');
+        } else {
+            role = document.getElementById('userType').value;
+        }
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('token', data.token); // Save the JWT token
+                // Redirect to dashboard based on role
+                if (role === 'farmer') {
+                    window.location.href = 'farmerDashboard.html';
+                } else if (role === 'buyer') {
+                    window.location.href = 'buyerDashboard.html';
+                } else if (role === 'delivery') {
+                    window.location.href = 'deliveryDashboard.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } else {
+                showNotification(data.error || 'Login failed.');
+            }
+        } catch (err) {
+            showNotification('Network error. Please try again.');
+        }
+    }
+    </script>
+</body>
+</html>

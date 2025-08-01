@@ -1,7 +1,7 @@
 
 async function fetchAndRenderProducts() {
   try {
-    const res = await fetch('https://farmily-2.onrender.com/api/products');
+    const res = await fetch('/api/products');
     const products = await res.json();
     const productList = document.getElementById('productList');
     productList.innerHTML = '';

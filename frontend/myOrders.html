@@ -40,15 +40,17 @@
         const ordersList = document.getElementById('ordersList');
         ordersList.innerHTML = '<div style="color:#b8894a;">Loading...</div>';
         try {
-          const res = await fetch('https://farmily-2.onrender.com/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
-          const orders = await res.json();
+          const res = await fetch('/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          let orders = await res.json();
           if (!orders.length) {
             ordersList.innerHTML = '<div style="color:#b8894a;">No orders found.</div>';
             return;
           }
+          // Show newest orders first
+          orders = orders.reverse();
           ordersList.innerHTML = orders.map(order => {
             let paymentStatusBadge = '';
-            if (order.paymentStatus && order.paymentStatus.toLowerCase() === 'paid') {
+            if (order.paymentStatus && ['paid','completed'].includes(order.paymentStatus.toLowerCase())) {
               paymentStatusBadge = '<span style="background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Paid</span>';
             } else {
               paymentStatusBadge = '<span style="background:#f7b84b22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Pending</span>';

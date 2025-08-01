@@ -1,5 +1,5 @@
 function fetchUsers(role) {
-  fetch(`https://farmily-2.onrender.com/api/admin/users?role=${role}`)
+  fetch(`http://localhost:5000/api/admin/users?role=${role}`)
     .then(res => res.json())
     .then(users => {
       const userList = document.getElementById('userList');

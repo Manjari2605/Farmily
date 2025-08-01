@@ -153,7 +153,11 @@ async function renderRecentOrders() {
   table.innerHTML = '<tr><td colspan="8" style="color:#aaa;">Loading...</td></tr>';
   try {
     const res = await fetch(`${API_BASE}/orders`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
-    const orders = await res.json();
+    let orders = await res.json();
+    // Show newest orders first
+    if (Array.isArray(orders)) {
+      orders = orders.slice().reverse();
+    }
     const user = await getCurrentUser();
     console.log('Farmer dashboard orders:', orders.map(o => ({
       id: o._id,
@@ -233,7 +237,7 @@ async function getCurrentUser() {
 
 window.assignAgent = async function(orderId) {
   const agentId = document.getElementById('agentSelect').value;
-  await fetch(`https://farmily-2.onrender.com/api/orders/${orderId}/assign-delivery`, {
+  await fetch(`/api/orders/${orderId}/assign-delivery`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({ deliveryAgentId: agentId })

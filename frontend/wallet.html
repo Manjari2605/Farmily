@@ -62,7 +62,7 @@
     </div>
     <script>
     let walletBalance = 0;
-    fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
         .then(res => res.json())
         .then(user => {
             walletBalance = user.wallet || 0;
@@ -136,7 +136,7 @@
             }
         }
         try {
-            const res = await fetch('https://farmily-2.onrender.com/api/users/wallet/add', {
+            const res = await fetch('/api/users/wallet/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

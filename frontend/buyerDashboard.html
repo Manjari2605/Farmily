@@ -102,7 +102,7 @@
         const ordersBtn = document.getElementById('profileOrdersBtn');
         let userName = '';
         async function fetchAndUpdateUserInfo() {
-          const res = await fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
           const user = await res.json();
           if (user.role && user.role.toLowerCase() === 'buyer') {
             userName = user.fullName || user.name || user.email || 'User';
@@ -174,7 +174,7 @@
           const ordersList = document.getElementById('ordersList');
           ordersList.innerHTML = '<div style="color:#b8894a;">Loading...</div>';
           try {
-            const res = await fetch('https://farmily-2.onrender.com/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+            const res = await fetch('/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
             const orders = await res.json();
             if (!orders.length) {
               ordersList.innerHTML = '<div style="color:#b8894a;">No orders found.</div>';
@@ -246,7 +246,7 @@
     let products = [];
     async function fetchProducts() {
       try {
-        const res = await fetch('https://farmily-2.onrender.com/api/products');
+        const res = await fetch('/api/products');
         const data = await res.json();
         console.log('Raw backend data:', data);
         // Normalize for frontend rendering

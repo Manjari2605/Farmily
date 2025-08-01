@@ -1,4 +1,4 @@
-const API_BASE = 'https://farmily-2.onrender.com/api/orders';
+const API_BASE = '/api/orders';
 
 function getToken() {
   return localStorage.getItem('token');
@@ -101,7 +101,7 @@ async function loadDashboard() {
 
 
 async function fetchProfileWallet() {
-  const res = await fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + getToken() } });
+  const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + getToken() } });
   try {
     const user = await res.json();
     const walletDiv = document.getElementById('profileWalletAmount');
@@ -140,7 +140,7 @@ async function loadDashboard() {
 }
 
 async function fetchDashboardStatsAndWallet() {
-  const res = await fetch('https://farmily-2.onrender.com/api/orders/delivery/stats', {
+  const res = await fetch('/api/orders/delivery/stats', {
     headers: { 'Authorization': 'Bearer ' + getToken() }
   });
   const stats = await res.json();

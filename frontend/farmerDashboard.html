@@ -137,7 +137,7 @@
         const nameDiv = document.getElementById('profileName');
         const logoutBtn = document.getElementById('logoutBtn');
         let userName = '';
-        fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+        fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
             .then(res => res.json())
             .then(user => {
                 userName = user.fullName || user.name || user.email || 'User';
@@ -158,7 +158,7 @@
     </script>
     <script>
 async function openAssignModal(orderId) {
-  const res = await fetch('https://farmily-2.onrender.com/api/users?role=delivery', {
+  const res = await fetch('/api/users?role=delivery', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
   });
   const agents = await res.json();
@@ -180,7 +180,7 @@ window.openAssignModal = openAssignModal;
 
 window.assignAgent = async function(orderId) {
   const agentId = document.getElementById('agentSelect').value;
-  await fetch(`https://farmily-2.onrender.com/api/orders/${orderId}/assign-delivery`, {
+  await fetch(`/api/orders/${orderId}/assign-delivery`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({ deliveryAgentId: agentId })

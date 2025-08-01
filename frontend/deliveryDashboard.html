@@ -110,7 +110,7 @@
     <script src="assets/js/deliveryDashboard.js"></script>
     <script>
 async function fetchDashboardStats() {
-  const res = await fetch('https://farmily-2.onrender.com/api/orders/delivery/stats', {
+  const res = await fetch('/api/orders/delivery/stats', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
   });
   const stats = await res.json();
@@ -120,7 +120,7 @@ async function fetchDashboardStats() {
 }
 
 async function fetchAssignedOrders() {
-  const res = await fetch('https://farmily-2.onrender.com/api/orders/delivery', {
+  const res = await fetch('/api/orders/delivery', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
   });
   const orders = await res.json();
@@ -151,7 +151,7 @@ function renderOrders(orders) {
   });
 }
 async function updateStatus(orderId, status) {
-  await fetch(`https://farmily-2.onrender.com/api/orders/${orderId}/update-status`, {
+  await fetch(`/api/orders/${orderId}/update-status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({ status })
@@ -166,7 +166,7 @@ async function updateStatus(orderId, status) {
         const nameDiv = document.getElementById('profileName');
         const logoutBtn = document.getElementById('logoutBtn');
         async function fetchAndUpdateUserInfo() {
-          const res = await fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
           const user = await res.json();
           nameDiv.textContent = user.fullName || user.name || user.email || 'Delivery Agent';
         }
@@ -185,7 +185,7 @@ async function updateStatus(orderId, status) {
     });
 
 async function fetchRecentDeliveries() {
-  const res = await fetch('https://farmily-2.onrender.com/api/orders/delivery/history', {
+  const res = await fetch('/api/orders/delivery/history', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
   });
   const orders = await res.json();

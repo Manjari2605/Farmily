@@ -25,7 +25,6 @@
     </style>
 </head>
 <body style="background:#f9e2c7;">
-    <!-- Header -->
     <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
         <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
             <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
@@ -90,12 +89,10 @@
         </div>
     </div>
     <script>
-    // --- Load cart from localStorage ---
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     let walletBalance = 0;
     let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
     document.getElementById('totalAmount').textContent = total;
-    // Render cart summary
     const cartSummary = document.getElementById('cartSummary');
     cartSummary.innerHTML = cart.map(item => `
         <div class='cart-item'>
@@ -107,7 +104,6 @@
             <div class='cart-item-price'>₹${item.price * item.qty}</div>
         </div>
     `).join('');
-    // --- Payment method logic ---
     const walletFields = document.getElementById('walletFields');
     const upiFields = document.getElementById('upiFields');
     const cardFields = document.getElementById('cardFields');
@@ -123,21 +119,22 @@
         });
     });
     showFields('wallet');
+<<<<<<< HEAD
     // --- Fetch wallet balance from backend ---
     fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+=======
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+>>>>>>> 6c2dd11e9257915ad7c83e50180ba068567a12c5
         .then(res => res.json())
         .then(user => {
             walletBalance = user.wallet || 0;
             document.getElementById('walletBalance').textContent = walletBalance;
         });
-    // --- Add funds logic (show alert for now) ---
-    // Removed Add Funds button logic
-    // --- Payment form submit ---
+   
     document.getElementById('paymentForm').onsubmit = async function(e) {
         e.preventDefault();
         errorMsg.style.display = 'none';
         const method = document.querySelector('input[name="paymentMethod"]:checked').value;
-        // Validate fields
         let upiId = '', cardNumber = '', cvv = '', expiryMonth = '', expiryYear = '';
         if (method === 'upi') {
             upiId = document.getElementById('upiId').value.trim();
@@ -173,17 +170,14 @@
                 return;
             }
         }
-        // Show processing
         document.getElementById('payBtn').style.display = 'none';
         document.getElementById('processing').style.display = 'block';
-        // Prepare order data
         const orderItems = cart.map(item => ({ product: item.id, quantity: item.qty }));
         const orderData = {
             items: orderItems,
             paymentMethod: method,
             totalAmount: total
         };
-        // Add extra payment details if needed
         if (method === 'upi') orderData.upiId = upiId;
         if (method === 'card') {
             orderData.cardNumber = cardNumber;
@@ -191,7 +185,6 @@
             orderData.expiryMonth = expiryMonth;
             orderData.expiryYear = expiryYear;
         }
-        // Send order to backend
         try {
             const res = await fetch('https://farmily-2.onrender.com/api/orders', {
                 method: 'POST',
@@ -205,10 +198,8 @@
                 const err = await res.json();
                 throw new Error(err.message || 'Order creation failed.');
             }
-            // Save order/cart/payment method for confirmation page
             localStorage.setItem('lastOrderCart', JSON.stringify(cart));
             localStorage.setItem('lastPaymentMethod', method);
-            // On success, clear cart and redirect to confirmation
             localStorage.removeItem('cart');
             window.location.href = 'confirmation.html?amount=' + total;
         } catch (err) {

@@ -43,35 +43,4 @@ farmily/
 ```
 
 
-## Setup Instructions
 
-### 1. Backend
-1. Install dependencies:
-   ```bash
-   cd backend
-   npm install
-   ```
-2. Set up `.env` with your MongoDB URI and JWT secret:
-   ```env
-   MONGO_URI=mongodb://localhost:27017/farmily
-   JWT_SECRET=your_jwt_secret
-   PORT=5000
-   ```
-3. Start backend server:
-   ```bash
-   node server.js
-   ```
-
-### 2. Frontend
-1. Open `frontend/index.html` in your browser.
-2. For API calls, ensure backend is running on `http://localhost:5000`.
-
-
-## Tech Stack
-- Node.js, Express.js, MongoDB, JWT
-- HTML, CSS, JavaScript (no frameworks)
-
-
-
-## License
-MIT

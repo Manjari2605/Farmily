@@ -16,11 +16,7 @@
                 <h1 class="brand-title" style="font-size:1.45rem;font-weight:700;letter-spacing:0.5px;margin-left:-0.1rem;">Farmily</h1>
             </div>
             <div style="display:flex;align-items:center;gap:1.2rem;">
-                <!-- Notification Bell -->
-                <div id="notificationBell" style="position:relative;cursor:pointer;background:#f6f9f6;border-radius:50%;padding:0.6rem 0.8rem;box-shadow:0 2px 8px rgba(49,130,206,0.08);display:flex;align-items:center;justify-content:center;">
-                    <i class="fas fa-bell" style="font-size:1.5rem;color:#b8894a;"></i>
-                    <span id="notificationBadge" style="display:none;position:absolute;top:0.4rem;right:0.5rem;background:#e53e3e;color:#fff;font-size:0.85rem;font-weight:700;border-radius:50%;padding:0.13rem 0.5rem;z-index:2;">0</span>
-                </div>
+               
                 <div id="profileMenuBtn" style="background:#f6f9f6;border-radius:50%;padding:0.6rem 0.8rem;box-shadow:0 2px 8px rgba(49,130,206,0.08);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;">
                     <i class="fas fa-user" style="font-size:1.5rem;color:#38a169;"></i>
                     <div id="profileDropdown" style="display:none;position:absolute;top:120%;right:0;background:#fff;border-radius:1rem;box-shadow:0 4px 16px #0001;padding:1.1rem 1.5rem;min-width:180px;z-index:10;">
@@ -32,7 +28,6 @@
         </div>
     </header>
     <main style="padding-top:3.5rem;min-height:100vh;">
-        <!-- Summary Cards -->
         <section style="max-width:1100px;margin:2.5rem auto 1.5rem auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
             <div class="summary-card" style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;">
                 <div style="background:#e6fffa;border-radius:50%;padding:1rem;display:flex;align-items:center;justify-content:center;">
@@ -62,9 +57,7 @@
                 </div>
             </div>
         </section>
-        <!-- Main Content: Upload Product & My Products -->
         <section style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 2fr;gap:2.2rem;align-items:flex-start;">
-            <!-- Upload Product Card -->
             <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2.2rem 1.5rem 1.7rem 1.5rem;">
                 <h3 style="font-size:1.25rem;font-weight:700;color:#38a169;margin-bottom:1.2rem;">Upload Product</h3>
                 <form id="uploadProductForm">
@@ -98,13 +91,11 @@
                     <button type="submit" class="btn btn-primary" style="width:100%;background:#38a169;color:#fff;font-weight:700;font-size:1.08rem;padding:0.8rem 0;border:none;border-radius:0.8rem;cursor:pointer;transition:background 0.2s;">Upload</button>
                 </form>
             </div>
-            <!-- My Products Grid -->
             <div>
                 <h3 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">My Products</h3>
                 <div id="myProductList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem;"></div>
             </div>
         </section>
-        <!-- Recent Orders Table -->
         <section style="max-width:1100px;margin:2.5rem auto 0 auto;">
             <h3 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Recent Orders</h3>
             <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:1.5rem 1.2rem;">
@@ -117,21 +108,16 @@
                             <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Qty (kg)</th>
                             <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Total (₹)</th>
                             <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;">Payment Status</th>
-                            <!-- Action column removed -->
                             <th style="padding:0.8rem 0.5rem;text-align:left;color:#38a169;font-weight:700;border-radius:0 0.7rem 0.7rem 0;">Order Status</th>
                         </tr>
                     </thead>
                     <tbody id="recentOrdersTable">
-                        <!-- Orders will be rendered here by JS. Each row should use the following logic:
-                             - Payment Status: <span class="badge-paid">Paid</span> or <span class="badge-pending">Pending Payment</span>
-                             - Order Status: <span class="badge-accepted">Accepted</span>, <span class="badge-delivered">Delivered</span>
-                        -->
+                        
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
-    <!-- Order Action Modal removed -->
     <script src="assets/js/farmerDashboard.js"></script>
     <style>
         .badge-paid { background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem; }
@@ -145,14 +131,12 @@
         .reject-btn:hover { background:#c53030; }
     </style>
     <script>
-    // Profile dropdown logic
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('profileMenuBtn');
         const dropdown = document.getElementById('profileDropdown');
         const nameDiv = document.getElementById('profileName');
         const logoutBtn = document.getElementById('logoutBtn');
         let userName = '';
-        // Fetch user name from backend
         fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
             .then(res => res.json())
             .then(user => {
@@ -213,6 +197,5 @@ window.closeAssignModal = function() {
   if (modal) modal.remove();
 };
     </script>
-    <!-- All dashboard JS logic is now in assets/js/farmerDashboard.js -->
 </body>
 </html>

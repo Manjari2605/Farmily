@@ -58,7 +58,6 @@
             if (order.status === 'delivered') statusBadge = '<span style="background:#38a16922;color:#38a169;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Delivered</span>';
             else statusBadge = '<span style="background:#b8894a22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Accepted</span>';
 
-            // Render all items in the order
             let itemsHtml = '';
             if (Array.isArray(order.items) && order.items.length > 0) {
               itemsHtml = order.items.map(item => {
@@ -80,7 +79,6 @@
               itemsHtml = '<div style="color:#b8894a;">No items found in this order.</div>';
             }
 
-            // Calculate total for the order
             let total = 0;
             if (Array.isArray(order.items)) {
               total = order.items.reduce((sum, item) => {
@@ -88,7 +86,6 @@
                 return sum + (item.quantity && price ? item.quantity * price : 0);
               }, 0);
             }
-            // Delivery status badge logic
             let deliveryStatus = order.deliveryStatus || 'pending';
             let deliveryBadge = '';
             if (deliveryStatus === 'pending') deliveryBadge = '<span style="background:#f7b84b22;color:#b8894a;font-weight:700;padding:0.3rem 0.9rem;border-radius:0.7rem;">Pending Pickup</span>';

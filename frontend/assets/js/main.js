@@ -1,4 +1,3 @@
-// Main JS for landing page, nav, and demo user fetch
 function fetchUsers(role) {
   fetch(`http://localhost:5000/api/admin/users?role=${role}`)
     .then(res => res.json())

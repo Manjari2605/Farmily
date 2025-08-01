@@ -9,12 +9,10 @@ router.get('/', getProducts);
 router.post('/upload', auth, role('farmer'), uploadProduct);
 router.post('/approve/:id', auth, role('admin'), approveProduct);
 
-// DELETE /api/products/:id
 router.delete('/:id', auth, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Product not found' });
-    // Optional: Only allow the owner (farmer) to delete
     if (product.farmer.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized' });
     }

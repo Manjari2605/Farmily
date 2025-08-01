@@ -1,12 +1,9 @@
-// Delivery Dashboard Logic
-// Assumes JWT token in localStorage as 'token'
 const API_BASE = '/api/orders';
 
 function getToken() {
   return localStorage.getItem('token');
 }
 
-// Fetch assigned orders for delivery agent
 async function fetchAssignedOrders() {
   const res = await fetch(`${API_BASE}/delivery`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
   try {
@@ -17,7 +14,6 @@ async function fetchAssignedOrders() {
   }
 }
 
-// Fetch delivery history for delivery agent
 async function fetchHistory() {
   const res = await fetch(`${API_BASE}/delivery/history`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
   try {
@@ -28,7 +24,6 @@ async function fetchHistory() {
   }
 }
 
-// Mark order as delivered
 async function markAsDelivered(orderId) {
   const res = await fetch(`${API_BASE}/${orderId}/update-status`, {
     method: 'PUT',
@@ -43,7 +38,6 @@ async function markAsDelivered(orderId) {
 }
 
 function renderAssignedOrders(orders) {
-  // Ensure the container exists before rendering
   const container = document.getElementById('assignedOrders');
   if (!container) return; // Prevent error if element is missing
   if (!orders || !orders.length) {
@@ -65,7 +59,6 @@ function renderAssignedOrders(orders) {
     `;
     container.appendChild(div);
   });
-  // Attach event listeners
   container.querySelectorAll('.deliver-btn').forEach(btn => {
     btn.addEventListener('click', async function() {
       const orderId = this.getAttribute('data-id');
@@ -76,9 +69,8 @@ function renderAssignedOrders(orders) {
 }
 
 function renderHistory(history) {
-  // Ensure the container exists before rendering
   const container = document.getElementById('deliveryHistory');
-  if (!container) return; // Prevent error if element is missing
+  if (!container) return; 
   if (!history || !history.length) {
     container.innerHTML = '<div style="color:#aaa;">No deliveries yet.</div>';
     return;
@@ -108,7 +100,6 @@ async function loadDashboard() {
 }
 
 
-// Fetch delivery agent profile (wallet)
 async function fetchProfileWallet() {
   const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + getToken() } });
   try {
@@ -118,7 +109,6 @@ async function fetchProfileWallet() {
   } catch {}
 }
 
-// Render recent deliveries as a table
 function renderRecentDeliveriesTable(history) {
   const table = document.getElementById('recentDeliveriesTable');
   if (!table) return;
@@ -149,9 +139,7 @@ async function loadDashboard() {
   await fetchDashboardStatsAndWallet();
 }
 
-// Fetch summary stats and update wallet in profile dropdown
 async function fetchDashboardStatsAndWallet() {
-  // Fetch summary stats from backend
   const res = await fetch('/api/orders/delivery/stats', {
     headers: { 'Authorization': 'Bearer ' + getToken() }
   });
@@ -159,7 +147,6 @@ async function fetchDashboardStatsAndWallet() {
   document.getElementById('activeDeliveries').textContent = stats.activeDeliveries || 0;
   document.getElementById('completedToday').textContent = stats.completedToday || 0;
   document.getElementById('todaysEarnings').textContent = '₹' + (stats.todaysEarnings || 0);
-  // Also update wallet in profile dropdown
   const walletDiv = document.getElementById('profileWalletAmount');
   if (walletDiv) walletDiv.textContent = '₹' + (stats.wallet || stats.todaysEarnings || 0);
 }

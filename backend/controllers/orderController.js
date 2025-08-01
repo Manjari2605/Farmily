@@ -7,7 +7,7 @@ exports.createOrder = async (req, res) => {
   console.log('Order create request body:', req.body);
   const buyer = req.user._id;
   let status = 'accepted';
-  let paymentStatus = 'paid';
+  let paymentStatus = 'completed';
   let codReleaseTime = null;
   let paidToFarmer = false;
 
@@ -28,7 +28,7 @@ exports.createOrder = async (req, res) => {
     codReleaseTime = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours from now
     paidToFarmer = false;
   } else if (['wallet', 'upi', 'card'].includes(paymentMethod)) {
-    paymentStatus = 'paid';
+    paymentStatus = 'completed';
     if (paymentMethod === 'wallet') {
       const user = await User.findById(buyer);
       if (!user) {

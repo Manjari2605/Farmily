@@ -1,15 +1,10 @@
-// Farmer Dashboard Interactivity
-// Handles: product upload (with image link), fetch & render products, summary cards, recent orders
-// Assumes user is authenticated as farmer and JWT is stored in localStorage as 'token'
 
 const API_BASE = '/api';
 
-// --- Utility: Get token ---
 function getToken() {
   return localStorage.getItem('token');
 }
 
-// --- Upload Product ---
 document.addEventListener('DOMContentLoaded', function() {
   const uploadForm = document.getElementById('uploadProductForm');
   if (uploadForm) {
@@ -53,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
   renderRecentOrders();
 });
 
-// --- Fetch & Render My Products ---
 async function renderMyProducts() {
   const list = document.getElementById('myProductList');
   if (!list) return;
@@ -83,7 +77,6 @@ async function renderMyProducts() {
         </div>
         <button class="delete-btn" data-id="${p._id}" style="background:#e53e3e;color:#fff;border:none;border-radius:0.5rem;padding:0.4rem 0.9rem;cursor:pointer;font-weight:600;">Delete</button>
       `;
-      // Add delete event
       card.querySelector('.delete-btn').addEventListener('click', async function() {
         if (confirm('Delete this product?')) {
           try {
@@ -111,9 +104,7 @@ async function renderMyProducts() {
   }
 }
 
-// --- Render Summary Cards ---
 async function renderSummary() {
-    // DEBUG: Log earnings calculation for each order item
     let debugEarnings = [];
   try {
     const res = await fetch(`${API_BASE}/products`, {
@@ -123,7 +114,6 @@ async function renderSummary() {
     const user = await getCurrentUser();
     const myProducts = products.filter(p => p.farmer && p.farmer._id === user._id);
     document.getElementById('summaryTotalProducts').textContent = myProducts.length;
-    // Orders and Earnings: loop through all orders and their items
     const ordersRes = await fetch(`${API_BASE}/orders`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
     const orders = await ordersRes.json();
     let totalOrders = 0;
@@ -157,7 +147,6 @@ async function renderSummary() {
   }
 }
 
-// --- Render Recent Orders Table ---
 async function renderRecentOrders() {
   const table = document.getElementById('recentOrdersTable');
   if (!table) return;
@@ -166,13 +155,11 @@ async function renderRecentOrders() {
     const res = await fetch(`${API_BASE}/orders`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
     const orders = await res.json();
     const user = await getCurrentUser();
-    // DEBUG: Log all orders for this farmer
     console.log('Farmer dashboard orders:', orders.map(o => ({
       id: o._id,
       deliveryAgent: o.deliveryAgent,
       deliveryStatus: o.deliveryStatus
     })));
-    // Find all order items for this farmer
     let myOrderRows = [];
     orders.forEach(order => {
       if (Array.isArray(order.items)) {
@@ -191,15 +178,11 @@ async function renderRecentOrders() {
             } else {
               paymentBadge = `<span class="badge-pending">${order.paymentMethod || 'Pending'}</span>`;
             }
-            // Order Status badge
             let statusBadge = '';
             if (order.status === 'delivered') statusBadge = '<span class="badge-delivered">Delivered</span>';
             else statusBadge = '<span class="badge-accepted">Accepted</span>';
-            // Payment method text
             let paymentMethodText = order.paymentMethod ? order.paymentMethod.toUpperCase() : 'N/A';
-            // Buyer name
             let buyerName = order.buyer && (order.buyer.fullName || order.buyer.name || order.buyer.email) ? (order.buyer.fullName || order.buyer.name || order.buyer.email) : 'Unknown';
-            // Render row
             let row = `
               <tr>
                 <td style="padding:0.7rem 0.5rem;">${order._id}</td>
@@ -214,7 +197,6 @@ async function renderRecentOrders() {
             if (!order.deliveryAgent) {
               row += `<td><button class="accept-btn" onclick="openAssignModal('${order._id}')">Assign Delivery</button></td>`;
             } else {
-              // Show status for assigned delivery
               if (order.deliveryStatus === 'pending') {
                 row += `<td><span style='color:#f7b84b;font-weight:700;'>Waiting for delivery agent</span></td>`;
               } else if (order.deliveryStatus === 'picked_up') {
@@ -241,9 +223,6 @@ async function renderRecentOrders() {
 }
 
 
-// Accept/Reject actions removed: all orders are auto-accepted now
-
-// --- Get Current User (from /api/auth/me) ---
 async function getCurrentUser() {
   if (window._currentUser) return window._currentUser;
   const res = await fetch(`${API_BASE}/auth/me`, { headers: { 'Authorization': 'Bearer ' + getToken() } });
@@ -260,7 +239,6 @@ window.assignAgent = async function(orderId) {
     body: JSON.stringify({ deliveryAgentId: agentId })
   });
   closeAssignModal();
-  // Instead of reload, force refetch and render recent orders
   if (typeof renderRecentOrders === 'function') {
     await renderRecentOrders();
   } else {

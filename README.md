@@ -10,7 +10,7 @@ Farmily is a full-stack web app connecting farmers, buyers, and delivery agents 
 - Delivery Agent: View assigned deliveries, update status, track earnings
 - Secure JWT authentication for all users
 - MongoDB database for persistent storage
-- Responsive, modern UI (HTML, CSS, JS)
+- Responsive, modern UI (HTML, CSS, JS; no frameworks)
 
 
 ## Folder Structure
@@ -28,7 +28,6 @@ farmily/
 │   ├── assets/
 │   │   ├── css/
 │   │   ├── js/
-|
 │   ├── index.html
 │   ├── login.html
 │   ├── signup.html
@@ -38,7 +37,6 @@ farmily/
 │   ├── wallet.html
 │   ├── payment.html
 │   ├── myOrders.html
-|
 ├── README.md
 ├── package.json
 └── .gitignore
@@ -75,3 +73,5 @@ farmily/
 
 
 
+## License
+MIT

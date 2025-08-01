@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
     <body>
-    <!-- Header -->
+
     <header class="header" style="width:100%;background:#f6fff8;box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
         <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
             <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
@@ -60,14 +60,13 @@
                     <label class="form-label" for="phone">Phone</label>
                     <input class="form-input" type="text" id="phone" name="phone" required>
                 </div>
-                <!-- Farmer-specific fields -->
+            
                 <div id="farmerFields" style="display:none;">
                     <div class="form-group">
                         <label class="form-label" for="landSize">Land Size (hectares)</label>
                         <input class="form-input" type="number" id="landSize" name="landSize" min="0" step="0.01" placeholder="e.g. 10" required>
                     </div>
                 </div>
-                <!-- Delivery agent-specific fields -->
                 <div id="deliveryFields" style="display:none;">
                     <div class="form-group">
                         <label class="form-label" for="vehicleType">Vehicle Type</label>
@@ -97,7 +96,6 @@
         var role = document.getElementById('role').value;
         document.getElementById('farmerFields').style.display = (role === 'farmer') ? 'block' : 'none';
         document.getElementById('deliveryFields').style.display = (role === 'delivery') ? 'block' : 'none';
-        // Set required attributes
         document.getElementById('landSize').required = (role === 'farmer');
         document.getElementById('vehicleType').required = (role === 'delivery');
         document.getElementById('licenseNumber').required = (role === 'delivery');

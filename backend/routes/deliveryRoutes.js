@@ -4,7 +4,6 @@ const auth = require('../middleware/authMiddleware');
 const Order = require('../models/Order');
 const User = require('../models/User');
 
-// Get assigned orders for delivery agent
 router.get('/assigned', auth, async (req, res) => {
   try {
     const orders = await Order.find({ deliveryAgent: req.user._id, status: { $in: ['accepted', 'delivered'] } })
@@ -15,7 +14,6 @@ router.get('/assigned', auth, async (req, res) => {
   }
 });
 
-// Mark order as delivered
 router.post('/:orderId/deliver', auth, async (req, res) => {
   try {
     const order = await Order.findOne({ _id: req.params.orderId, deliveryAgent: req.user._id });
@@ -29,11 +27,9 @@ router.post('/:orderId/deliver', auth, async (req, res) => {
   }
 });
 
-// Get delivery history and earnings
 router.get('/history', auth, async (req, res) => {
   try {
     const orders = await Order.find({ deliveryAgent: req.user._id, status: 'delivered' }).populate('product');
-    // Example: Rs. 30 per delivery
     const earnings = orders.length * 30;
     res.json({ orders, earnings });
   } catch (err) {

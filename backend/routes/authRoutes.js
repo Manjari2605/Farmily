@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const auth = require('../middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
 
-// Signup route (example, you may already have this)
 router.post('/signup', async (req, res) => {
     try {
         const user = new User(req.body);
@@ -16,7 +15,6 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-// Login route
 router.post('/login', async (req, res) => {
     const { email, password, role } = req.body;
     try {
@@ -35,7 +33,6 @@ router.post('/login', async (req, res) => {
             console.log('Role mismatch:', { entered: role, stored: user.role });
             return res.status(400).json({ error: 'Role mismatch' });
         }
-        // Generate JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.json({ message: 'Login successful', user, token });
@@ -45,7 +42,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Admin login route
 router.post('/admin-login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -60,7 +56,6 @@ router.post('/admin-login', async (req, res) => {
     }
 });
 
-// Get current user
 router.get('/me', auth, (req, res) => {
     res.json(req.user);
 });

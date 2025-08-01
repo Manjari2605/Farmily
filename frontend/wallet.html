@@ -61,7 +61,6 @@
         </form>
     </div>
     <script>
-    // --- Fetch wallet balance from backend ---
     let walletBalance = 0;
     fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
         .then(res => res.json())
@@ -69,7 +68,6 @@
             walletBalance = user.wallet || 0;
             document.getElementById('walletBalance').textContent = walletBalance;
         });
-    // --- Payment method fields logic ---
     const addMethod = document.getElementById('addMethod');
     const upiId = document.getElementById('upiId');
     const cardNumber = document.getElementById('cardNumber');
@@ -97,7 +95,6 @@
             expiryYear.style.display = 'none';
         }
     });
-    // --- Add money form submit ---
     document.getElementById('walletForm').onsubmit = async function(e) {
         e.preventDefault();
         document.getElementById('successMsg').style.display = 'none';
@@ -138,7 +135,6 @@
                 return;
             }
         }
-        // Call backend to add money to wallet
         try {
             const res = await fetch('/api/users/wallet/add', {
                 method: 'POST',

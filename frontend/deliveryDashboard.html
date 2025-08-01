@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery Dashboard - Farmily</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <!-- Fix Font Awesome: use <link> not <script> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body style="background:#f9e2c7;">
-    <!-- Farmily Navbar -->
 <header class="header" style="width:100%;background:linear-gradient(90deg,#f6fff8 60%,#e6fffa 100%);box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;position:relative;z-index:10;">
     <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
         <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
@@ -30,7 +28,6 @@
     </div>
 </header>
 
-        <!-- Summary Cards -->
         <div style="max-width:1200px;margin:0 auto;display:flex;gap:2rem;justify-content:flex-start;padding:2.2rem 2rem 0 2rem;position:relative;z-index:1;">
             <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(124,58,237,0.10);padding:1.3rem 2.2rem;display:flex;flex-direction:column;align-items:center;min-width:160px;">
                 <div style="background:#ede9fe;color:#7c3aed;border-radius:50%;padding:0.7rem 0.9rem;margin-bottom:0.5rem;font-size:1.5rem;"><i class="fas fa-truck"></i></div>
@@ -50,7 +47,6 @@
             </div>
         </div>
 
-        <!-- Pending Deliveries Section -->
         <div style="max-width:1200px;margin:2.5rem auto 0 auto;">
             <h2 style="font-size:1.35rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Pending Deliveries</h2>
             <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:2.2rem 2.2rem 1.5rem 2.2rem;">
@@ -67,14 +63,12 @@
     </tr>
                         </thead>
                         <tbody id="pendingDeliveriesTable">
-                            <!-- Populated by JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Wallet in Profile Dropdown -->
         <style>
         #profileWalletRow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1rem; justify-content: center; }
         #profileWalletIcon { background: #e6fffa; color: #38a169; border-radius: 50%; padding: 0.5rem 0.7rem; font-size: 1.2rem; }
@@ -96,7 +90,6 @@
           }
         });
         </script>
-        <!-- Recent Deliveries Table -->
         <div style="max-width:1200px;margin:2.5rem auto 0 auto;">
             <h2 style="font-size:1.25rem;font-weight:700;color:#b8894a;margin-bottom:1.2rem;">Recent Deliveries</h2>
             <div style="background:#fff;border-radius:1.2rem;box-shadow:0 2px 12px rgba(56,161,105,0.10);padding:1.5rem 1.2rem;">
@@ -109,7 +102,6 @@
                         </tr>
                     </thead>
                     <tbody id="recentDeliveriesTable">
-                        <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
@@ -118,7 +110,6 @@
     <script src="assets/js/deliveryDashboard.js"></script>
     <script>
 async function fetchDashboardStats() {
-  // Fetch summary stats from backend
   const res = await fetch('/api/orders/delivery/stats', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
   });
@@ -169,13 +160,11 @@ async function updateStatus(orderId, status) {
   fetchDashboardStats();
 }
 
-// Profile dropdown logic for delivery agent
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('profileMenuBtn');
         const dropdown = document.getElementById('profileDropdown');
         const nameDiv = document.getElementById('profileName');
         const logoutBtn = document.getElementById('logoutBtn');
-        // Fetch user info from backend
         async function fetchAndUpdateUserInfo() {
           const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
           const user = await res.json();
@@ -195,7 +184,6 @@ async function updateStatus(orderId, status) {
         });
     });
 
-// Recent Deliveries: show delivered orders with order id and customer name
 async function fetchRecentDeliveries() {
   const res = await fetch('/api/orders/delivery/history', {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header" style="width:100%;background:#f6fff8;box-shadow:0 4px 24px rgba(56,161,105,0.10);padding:0.7rem 0;">
         <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;">
             <div class="nav-brand" style="display:flex;align-items:center;margin-left:-1.2rem;">
@@ -26,7 +25,6 @@
         </div>
     </header>
 
-    <!-- Login Form -->
     <main style="background: url('https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2021/01/optimising_agriculture/22518234-1-eng-GB/Optimising_agriculture_pillars.jpg') center center/cover no-repeat fixed; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
         <div class="form-container" style="max-width: 520px; min-width:340px; background: rgba(255,255,255,0.93); box-shadow: 0 8px 32px rgba(56,161,105,0.13); border-radius: 1.5rem; padding: 2.5rem 2rem; position: relative;">
             <div style="text-align: center; margin-bottom: 2rem;">
@@ -55,7 +53,6 @@
                     </select>
                 </div>
                 <script>
-                // Pre-select userType based on URL query parameter and hide selector if present
                 document.addEventListener('DOMContentLoaded', function() {
                     const params = new URLSearchParams(window.location.search);
                     const role = params.get('role');
@@ -114,7 +111,6 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         let role = '';
-        // If role selector is hidden, get value from URL
         if (document.getElementById('userTypeGroup').style.display === 'none') {
             const params = new URLSearchParams(window.location.search);
             role = params.get('role');
@@ -129,8 +125,7 @@
             });
             const data = await res.json();
             if (res.ok) {
-                localStorage.setItem('token', data.token); // Save the JWT token
-                // Redirect to dashboard based on role
+                localStorage.setItem('token', data.token); 
                 if (role === 'farmer') {
                     window.location.href = 'farmerDashboard.html';
                 } else if (role === 'buyer') {

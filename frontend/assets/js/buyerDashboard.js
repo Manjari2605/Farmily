@@ -1,5 +1,4 @@
 
-// Fetch products from backend and render
 async function fetchAndRenderProducts() {
   try {
     const res = await fetch('/api/products');
@@ -34,5 +33,4 @@ async function fetchAndRenderProducts() {
   }
 }
 
-// Initial render from backend
 document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);

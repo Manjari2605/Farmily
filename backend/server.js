@@ -24,14 +24,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Delivery routes for delivery dashboard endpoints
-app.use('/api/orders', require('./routes/orderRoutes'));
 
-// Admin routes (protected)
-app.use('/api/admin', require('./routes/adminRoutes'));
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/farmily', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

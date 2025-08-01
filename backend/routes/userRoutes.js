@@ -4,12 +4,9 @@ const auth = require('../middleware/authMiddleware');
 const { getUsersByRole, getStats } = require('../controllers/userController');
 
 
-// Get users by role
 router.get('/', auth, getUsersByRole);
-// Get stats
 router.get('/stats', auth, getStats);
 
-// Add money to wallet (POST /api/users/wallet/add)
 router.post('/wallet/add', auth, async (req, res) => {
   try {
     const amount = parseInt(req.body.amount);

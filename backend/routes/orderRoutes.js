@@ -1,6 +1,4 @@
-// In your main server.js or app.js, add:
-// const deliveryRoutes = require('./routes/deliveryRoutes');
-// app.use('/api/delivery', deliveryRoutes);
+
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/authMiddleware');
@@ -10,12 +8,9 @@ const User = require('../models/User');
 const { createOrder, getOrders, getUserOrders, updateOrderStatus } = require('../controllers/orderController');
 
 router.post('/', auth, createOrder);
-router.post('/create', auth, createOrder); // legacy, keep for compatibility
+router.post('/create', auth, createOrder); 
 router.get('/', auth, getOrders);
 router.get('/my', auth, getUserOrders);
-// PATCH order status (accept/reject)
-
-// Accept order
 
 router.post('/:id/accept', auth, async (req, res) => {
   try {
@@ -33,7 +28,6 @@ router.post('/:id/accept', auth, async (req, res) => {
   }
 });
 
-// Reject order (with refund if paid)
 
 router.post('/:id/reject', auth, async (req, res) => {
   try {
@@ -46,7 +40,6 @@ router.post('/:id/reject', auth, async (req, res) => {
     order.status = 'Rejected';
     await order.save();
 
-    // Refund logic if payment was made
     if (order.paymentStatus === 'Paid') {
       const buyer = await User.findById(order.buyer);
       if (buyer) {
@@ -61,43 +54,33 @@ router.post('/:id/reject', auth, async (req, res) => {
   }
 });
 
-// PATCH order status (accept/reject)
 router.patch('/:id/status', auth, updateOrderStatus);
 
-// Add/update delivery status and payout logic
 router.put('/:id/update-status', async (req, res) => {
   const { status } = req.body;
   const order = await Order.findById(req.params.id).populate({ path: 'items.product', populate: { path: 'farmer' } });
   if (!order) return res.status(404).send('Order not found');
 
-  // Debug logging
   console.log('Order after populate:', JSON.stringify(order, null, 2));
   if (Array.isArray(order.items) && order.items.length > 0) {
     console.log('First item product:', JSON.stringify(order.items[0].product, null, 2));
     console.log('Farmer:', JSON.stringify(order.items[0].product.farmer, null, 2));
   }
 
-  // Update delivery status
   order.deliveryStatus = status;
 
-  // Debug: print paymentMethod, deliveryStatus, paidToFarmer before payout logic
   console.log('[DEBUG] paymentMethod:', order.paymentMethod, 'deliveryStatus:', order.deliveryStatus, 'paidToFarmer:', order.paidToFarmer);
 
-  // If delivered, handle payouts and payment status only if not already paid
   if (status === 'delivered' && !order.paidToFarmer) {
-    // Make paymentMethod check case-insensitive
     if (order.paymentMethod && order.paymentMethod.toLowerCase() === 'cod') {
-      // Mark as paid to farmer and update payment status
       order.paidToFarmer = true;
       order.paymentStatus = 'completed';
       console.log('[COD LOGIC] Set paidToFarmer=true, paymentStatus=completed for order', order._id);
-      // Find farmer from first item, fallback to product document if not populated
-      let farmerId = null;
+     let farmerId = null;
       if (Array.isArray(order.items) && order.items.length > 0) {
         if (order.items[0].product && order.items[0].product.farmer) {
           farmerId = order.items[0].product.farmer;
         } else if (order.items[0].product) {
-          // If not populated, fetch product and get farmer
           const Product = require('../models/Product');
           const prodDoc = await Product.findById(order.items[0].product);
           if (prodDoc && prodDoc.farmer) {
@@ -126,7 +109,6 @@ router.put('/:id/update-status', async (req, res) => {
         console.log('[COD LOGIC] No farmerId found for order:', order._id);
       }
     }
-    // Delivery agent earnings
     if (order.deliveryAgent) {
       const agent = await User.findById(order.deliveryAgent);
       if (agent) {
@@ -140,8 +122,7 @@ router.put('/:id/update-status', async (req, res) => {
   res.send(order);
 });
 
-// Assign delivery agent to order
-// Assign delivery agent to order
+
 router.put('/:id/assign-delivery', auth, async (req, res) => {
   const { deliveryAgentId } = req.body;
   const order = await Order.findById(req.params.id);
@@ -151,8 +132,7 @@ router.put('/:id/assign-delivery', auth, async (req, res) => {
   await order.save();
   res.json({ success: true, message: 'Delivery agent assigned', order });
 });
-// Get assigned orders for delivery agent
-// Get assigned orders for delivery agent (only show pending/picked_up)
+
 router.get('/delivery', auth, async (req, res) => {
   const agentId = req.user._id;
   const orders = await Order.find({ deliveryAgent: agentId, deliveryStatus: { $in: ['pending', 'picked_up'] } })
@@ -161,7 +141,6 @@ router.get('/delivery', auth, async (req, res) => {
   res.json(orders);
 });
 
-// Get delivery dashboard stats for delivery agent
 router.get('/delivery/stats', auth, async (req, res) => {
   const agentId = req.user._id;
   const activeDeliveries = await Order.countDocuments({ deliveryAgent: agentId, deliveryStatus: { $in: ['pending', 'picked_up'] } });
@@ -170,14 +149,12 @@ router.get('/delivery/stats', auth, async (req, res) => {
     deliveryStatus: 'delivered',
     updatedAt: { $gte: new Date(new Date().setHours(0,0,0,0)) }
   });
-  // Example: earnings for today
   const deliveredOrders = await Order.find({
     deliveryAgent: agentId,
     deliveryStatus: 'delivered',
     updatedAt: { $gte: new Date(new Date().setHours(0,0,0,0)) }
   });
   const todaysEarnings = deliveredOrders.length * 100;
-  // Avg delivery time logic can be added if you track timestamps
   res.json({
     activeDeliveries,
     completedToday,
@@ -186,10 +163,8 @@ router.get('/delivery/stats', auth, async (req, res) => {
   });
 });
 
-// Get delivery history for delivery agent
 router.get('/delivery/history', auth, async (req, res) => {
   const agentId = req.user._id;
-  // Find delivered orders assigned to this agent, sorted by most recent
   const orders = await Order.find({ deliveryAgent: agentId, deliveryStatus: 'delivered' })
     .populate('buyer')
     .populate({ path: 'items.product', populate: { path: 'farmer' } })
@@ -198,7 +173,6 @@ router.get('/delivery/history', auth, async (req, res) => {
   res.json(orders);
 });
 
-// Fallback for GET requests to /:id/accept and /:id/reject to help with debugging
 router.get('/:id/accept', (req, res) => {
   res.status(405).json({ error: 'Use POST method for accepting orders.' });
 });

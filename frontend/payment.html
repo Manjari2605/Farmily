@@ -124,7 +124,7 @@
     });
     showFields('wallet');
     // --- Fetch wallet balance from backend ---
-    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+    fetch('https://farmily-2.onrender.com/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
         .then(res => res.json())
         .then(user => {
             walletBalance = user.wallet || 0;
@@ -193,7 +193,7 @@
         }
         // Send order to backend
         try {
-            const res = await fetch('/api/orders', {
+            const res = await fetch('https://farmily-2.onrender.com/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -233,7 +233,7 @@ async function getCurrentUser() {
 
 window.assignAgent = async function(orderId) {
   const agentId = document.getElementById('agentSelect').value;
-  await fetch(`/api/orders/${orderId}/assign-delivery`, {
+  await fetch(`https://farmily-2.onrender.com/api/orders/${orderId}/assign-delivery`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({ deliveryAgentId: agentId })

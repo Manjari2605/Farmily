@@ -40,7 +40,7 @@
         const ordersList = document.getElementById('ordersList');
         ordersList.innerHTML = '<div style="color:#b8894a;">Loading...</div>';
         try {
-          const res = await fetch('/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+          const res = await fetch('https://farmily-2.onrender.com/api/orders/my', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
           const orders = await res.json();
           if (!orders.length) {
             ordersList.innerHTML = '<div style="color:#b8894a;">No orders found.</div>';
